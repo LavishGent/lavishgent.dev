@@ -1,10 +1,11 @@
 ---
+import { withBase } from '../utils/url';
 import Base from '../layouts/Base.astro';
 ---
 
 <Base title="Not found">
   <h1>404</h1>
   <p>
-    That page doesn't exist. <a href="/">Go home</a>.
+    That page doesn't exist. <a href={withBase('/')}>Go home</a>.
   </p>
 </Base>

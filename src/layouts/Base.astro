@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../utils/url';
 import '../styles/global.css';
 import { ClientRouter } from 'astro:transitions';
 
@@ -32,9 +33,9 @@ const nav = [
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+    <link rel="alternate" type="application/rss+xml" title={siteName} href={withBase('/rss.xml')} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content={type} />
@@ -53,13 +54,16 @@ const nav = [
   <body>
     <header>
       <nav aria-label="Primary">
-        <a class="wordmark" href="/">
+        <a class="wordmark" href={withBase('/')}>
           ~/<span>lavishgent</span>
         </a>
         <ul>
           {nav.map((item) => (
             <li>
-              <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+              <a
+                href={withBase(item.href)}
+                aria-current={path.startsWith(withBase(item.href)) ? 'page' : undefined}
+              >
                 {item.label}
               </a>
             </li>
@@ -78,7 +82,7 @@ const nav = [
     <footer>
       <span class="mono">© {new Date().getFullYear()} lavishgent</span>
       <span class="mono">
-        <a href="/rss.xml">rss</a> ·
+        <a href={withBase('/rss.xml')}>rss</a> ·
         <a href="https://github.com/lavishgent" rel="me noopener">
           github
         </a>

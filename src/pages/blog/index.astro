@@ -1,4 +1,5 @@
 ---
+import { withBase } from '../../utils/url';
 import Base from '../../layouts/Base.astro';
 import PostList from '../../components/PostList.astro';
 import { getPosts, allTags } from '../../utils/posts';
@@ -12,7 +13,7 @@ const tags = allTags(posts);
   {tags.length > 0 && (
     <p class="tags">
       {tags.map((tag) => (
-        <a class="tag" href={`/tags/${tag}`}>
+        <a class="tag" href={withBase(`/tags/${tag}`)}>
           #{tag}
         </a>
       ))}
