@@ -1,0 +1,55 @@
+---
+import { formatDate, readingTime, type Post } from '../utils/posts';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul>
+  {posts.map((post) => (
+    <li>
+      <a href={`/blog/${post.id}`}>
+        <span class="mono">
+          {formatDate(post.data.date)} · {readingTime(post.body)} min read
+          {post.data.draft && ' · draft'}
+        </span>
+        <h3>{post.data.title}</h3>
+        <p>{post.data.description}</p>
+      </a>
+    </li>
+  ))}
+</ul>
+
+<style>
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  li + li {
+    border-top: 1px solid var(--border);
+  }
+  a {
+    display: block;
+    padding-block: var(--space-6);
+    color: var(--fg);
+  }
+  a:hover {
+    text-decoration: none;
+  }
+  a:hover h3 {
+    color: var(--accent);
+  }
+  h3 {
+    margin: var(--space-1) 0 var(--space-2);
+    font-size: 1.25rem;
+    transition: color 0.15s;
+  }
+  p {
+    margin: 0;
+    color: var(--muted);
+  }
+</style>

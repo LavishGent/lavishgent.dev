@@ -1,0 +1,180 @@
+---
+import '../styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+  type?: 'website' | 'article';
+}
+
+const siteName = 'lavishgent';
+const {
+  title,
+  description = 'Engineering notes on shipping quality code fast.',
+  type = 'website',
+} = Astro.props;
+const fullTitle = title ? `${title} · ${siteName}` : `${siteName} · engineering notes`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/blog', label: 'blog' },
+  { href: '/about', label: 'about' },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <link rel="alternate" type="application/rss+xml" title={siteName} href="/rss.xml" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline>
+      // Set the theme before first paint. Default is dark; a saved choice or a light system setting overrides it.
+      (function () {
+        var saved = localStorage.getItem('theme');
+        var light = window.matchMedia('(prefers-color-scheme: light)').matches;
+        document.documentElement.dataset.theme = saved || (light ? 'light' : 'dark');
+      })();
+    </script>
+    <ClientRouter />
+  </head>
+  <body>
+    <header>
+      <nav aria-label="Primary">
+        <a class="wordmark" href="/">
+          ~/<span>lavishgent</span>
+        </a>
+        <ul>
+          {nav.map((item) => (
+            <li>
+              <a href={item.href} aria-current={path.startsWith(item.href) ? 'page' : undefined}>
+                {item.label}
+              </a>
+            </li>
+          ))}
+          <li>
+            <button id="theme-toggle" type="button" aria-label="Toggle color theme">
+              ◐
+            </button>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer>
+      <span class="mono">© {new Date().getFullYear()} lavishgent</span>
+      <span class="mono">
+        <a href="/rss.xml">rss</a> ·
+        <a href="https://github.com/lavishgent" rel="me noopener">
+          github
+        </a>
+      </span>
+    </footer>
+
+    <script>
+      function bindToggle() {
+        document.getElementById('theme-toggle')?.addEventListener('click', () => {
+          const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+          document.documentElement.dataset.theme = next;
+          localStorage.setItem('theme', next);
+        });
+      }
+      bindToggle();
+      document.addEventListener('astro:after-swap', () => {
+        // View transitions replace the document element, so reapply the saved theme.
+        const saved = localStorage.getItem('theme');
+        const light = window.matchMedia('(prefers-color-scheme: light)').matches;
+        document.documentElement.dataset.theme = saved || (light ? 'light' : 'dark');
+      });
+      document.addEventListener('astro:page-load', bindToggle);
+    </script>
+  </body>
+</html>
+
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+  }
+  header,
+  main,
+  footer {
+    width: 100%;
+    max-width: calc(var(--measure) + 2 * var(--space-6));
+    margin-inline: auto;
+    padding-inline: var(--space-6);
+  }
+  header {
+    border-bottom: 1px solid var(--border);
+  }
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-block: var(--space-4);
+  }
+  .wordmark {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    color: var(--fg);
+  }
+  .wordmark span {
+    color: var(--accent);
+  }
+  ul {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+  }
+  ul a {
+    color: var(--muted);
+  }
+  ul a:hover,
+  ul a[aria-current='page'] {
+    color: var(--fg);
+  }
+  button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--muted);
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  button:hover {
+    color: var(--accent);
+  }
+  main {
+    flex: 1;
+    padding-block: var(--space-12);
+  }
+  footer {
+    display: flex;
+    justify-content: space-between;
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--border);
+  }
+  footer a {
+    color: var(--muted);
+  }
+</style>

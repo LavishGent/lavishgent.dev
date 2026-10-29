@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import { getPosts } from '../utils/posts';
+
+const latest = (await getPosts()).slice(0, 5);
+---
+
+<Base>
+  <section class="hero">
+    <p class="mono">hey, I'm</p>
+    <h1>
+      lavishgent<span>.</span>
+    </h1>
+    <p class="lede">
+      I'm a software engineer who likes startups. I write about shipping quality code fast.
+    </p>
+  </section>
+
+  <section>
+    <h2 class="mono">latest posts</h2>
+    <PostList posts={latest} />
+    <p>
+      <a class="mono" href="/blog">
+        all posts →
+      </a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    margin-bottom: var(--space-12);
+  }
+  h1 {
+    margin: var(--space-2) 0;
+    font-size: clamp(2.5rem, 8vw, 4rem);
+  }
+  h1 span {
+    color: var(--accent);
+  }
+  .lede {
+    max-width: 48ch;
+    font-size: 1.25rem;
+    color: var(--muted);
+  }
+  h2 {
+    margin: 0;
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+</style>
