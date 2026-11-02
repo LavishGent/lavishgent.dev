@@ -3,6 +3,9 @@ dist/
 # generated types
 .astro/
 
+# posts are cloned from the private LavishGent/lavish-thoughts repo
+posts/
+
 # dependencies
 node_modules/
 
